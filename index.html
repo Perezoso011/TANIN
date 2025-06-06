@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TANIN – Turismo con Sabor a Bodega</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Georgia', serif;
+    }
+
+    .hero {
+      background-image: url('https://images.pexels.com/photos/19046646/pexels-photo-19046646/free-photo-of-paisaje-montanas-agricultura-uvas.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .hero h1 {
+      font-size: 3em;
+      margin-bottom: 0.5em;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      margin-bottom: 1.5em;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .hero a {
+      text-decoration: none;
+      padding: 15px 30px;
+      background-color: #5e1b1b;
+      color: white;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .hero a:hover {
+      background-color: #842c2c;
+    }
+
+    .menu {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .menu-button {
+      font-size: 2em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+    }
+
+    .menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: rgba(0,0,0,0.8);
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .menu-content a {
+      display: block;
+      color: white;
+      margin: 10px 0;
+      text-decoration: none;
+    }
+
+    .menu-content a:hover {
+      text-decoration: underline;
+    }
+
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .whatsapp img {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    #about {
+      background: #fff;
+      color: #333;
+    }
+
+    #gallery {
+      background: #f5f5f5;
+    }
+
+    #gallery img {
+      width: 200px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #experiences {
+      background: #fff;
+      color: #333;
+    }
+
+    #contact {
+      background: #f5f5f5;
+    }
+
+    #contact form {
+      max-width: 400px;
+      margin: 20px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #contact input, #contact textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 1em;
+    }
+
+    #contact button {
+      padding: 10px 20px;
+      background: #5e1b1b;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #contact button:hover {
+      background: #842c2c;
+    }
+
+    .bodegas-scroll {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 40px;
+      padding-bottom: 20px;
+      scroll-behavior: smooth;
+    }
+    .bodegas-scroll > div {
+      min-width: 250px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 10px 20px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .bodegas-scroll h3 {
+      margin-bottom: 10px;
+    }
+    .bodegas-scroll img {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .bodegas-scroll img:hover {
+      transform: scale(1.05);
+    }
+    /* Modal estilos */
+    .modal-img {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      padding-top: 60px;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.85);
+      text-align: center;
+    }
+    .modal-content-img {
+      margin: auto;
+      display: block;
+      max-width: 80vw;
+      max-height: 80vh;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+    }
+    .modal-close {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2100;
+    }
+    #modalCaption {
+      color: #fff;
+      margin-top: 10px;
+      font-size: 1.1em;
+    }
+    .menu, .whatsapp {
+      transition: opacity 0.5s;
+    }
+    .oculto {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .hero h1, .hero p, .hero a {
+      opacity: 0;
+      transform: translateY(80px);
+      transition:
+        opacity 1s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .hero.visible h1 {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.2s;
+    }
+    .hero.visible p {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.6s;
+    }
+    .hero.visible a {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 1s;
+    }
+    .experiences-collage {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 30px;
+    }
+    .experiences-collage img,
+    .experiences-collage video {
+      width: 220px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s;
+      background: #222;
+      display: block;
+    }
+    .experiences-collage img:hover,
+    .experiences-collage video:hover {
+      transform: scale(1.07);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      z-index: 2;
+    }
+    @media (max-width: 900px) {
+      .experiences-collage img,
+      .experiences-collage video {
+        width: 45vw;
+        height: 28vw;
+        min-width: 140px;
+        min-height: 90px;
+      }
+    }
+    .modal-content-video {
+      margin: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu">
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
+    <div class="menu-content" id="menuContent">
+      <a href="#about">Sobre TANIN</a>
+      <a href="#gallery">Galería</a>
+      <a href="#experiences">Experiencias</a>
+      <a href="#contact">Contacto</a>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>TANIN</h1>
+    <p>Turismo con Sabor a Bodega</p>
+    <a href="#about">Explorar</a>
+  </section>
+
+  <section id="about">
+    <h2>Sobre TANIN</h2>
+    <p>
+      TANIN es un proyecto de enoturismo que invita a descubrir el mundo del vino a través de experiencias auténticas en bodegas locales. Disfruta de recorridos, degustaciones y actividades únicas en un entorno natural.
+    </p>
+  </section>
+
+  <section id="gallery">
+    <h2>Galería</h2>
+    <div class="bodegas-scroll">
+      <div>
+        <h3>Bodega 1</h3>
+        <img src="https://images.pexels.com/photos/1407854/pexels-photo-1407854.jpeg?auto=compress&w=400" alt="Bodega 1 - Viñedo" onclick="openModal(this)">
+        <img src="https://images.pexels.com/photos/1407856/pexels-photo-1407856.jpeg?auto=compress&w=400" alt="Bodega 1 - Barricas" onclick="openModal(this)">
+      </div>
+      <div>
+        <h3>Bodega 2</h3>
+        <img src="https://images.pexels.com/photos/39511/pexels-photo-39511.jpeg?auto=compress&w=400" alt="Bodega 2 - Copa de vino" onclick="openModal(this)">
+        <img src="https://images.pexels.com/photos/1407858/pexels-photo-1407858.jpeg?auto=compress&w=400" alt="Bodega 2 - Uvas" onclick="openModal(this)">
+      </div>
+      <div>
+        <h3>Bodega 3</h3>
+        <img src="https://images.pexels.com/photos/1407860/pexels-photo-1407860.jpeg?auto=compress&w=400" alt="Bodega 3 - Paisaje" onclick="openModal(this)">
+        <img src="https://images.pexels.com/photos/1407862/pexels-photo-1407862.jpeg?auto=compress&w=400" alt="Bodega 3 - Botellas" onclick="openModal(this)">
+      </div>
+      <div>
+        <h3>Bodega 4</h3>
+        <img src="https://images.pexels.com/photos/1407864/pexels-photo-1407864.jpeg?auto=compress&w=400" alt="Bodega 4 - Degustación" onclick="openModal(this)">
+        <img src="https://images.pexels.com/photos/1407866/pexels-photo-1407866.jpeg?auto=compress&w=400" alt="Bodega 4 - Barricas antiguas" onclick="openModal(this)">
+      </div>
+      <div>
+        <h3>Bodega 5</h3>
+        <img src="https://images.pexels.com/photos/1704120/pexels-photo-1704120.jpeg?auto=compress&w=400" alt="Bodega 5 - Entrada" onclick="openModal(this)">
+        <img src="https://images.pexels.com/photos/261169/pexels-photo-261169.jpeg?auto=compress&w=400" alt="Bodega 5 - Sala de barricas" onclick="openModal(this)">
+      </div>
+    </div>
+  </section>
+
+  <section id="experiences">
+    <h2>Experiencias</h2>
+    <p>
+      Ofrecemos visitas guiadas, catas de vino, talleres y eventos especiales para que vivas el enoturismo de una manera diferente.
+    </p>
+    <div class="experiences-collage">
+      <video src="https://i.imgur.com/9qvxwV8.mp4" autoplay loop muted playsinline
+        onclick="openModalVideo(this)" style="background:#222;" alt="Cata de vinos"></video>
+      <video src="https://i.imgur.com/4DSvUeg.mp4" autoplay loop muted playsinline
+        onclick="openModalVideo(this)" style="background:#222;" alt="Taller de vinos"></video>
+      <img src="https://i.imgur.com/FxDJFxt.gif" alt="Recorrido por viñedos" onclick="openModal(this)">
+      <img src="https://i.imgur.com/cjwr2vr.gif" alt="Evento especial" onclick="openModal(this)">
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contacto</h2>
+    <p>
+      Escríbenos a nuestro correo: <a href="mailto:contacto@tanin.com" style="color:#5e1b1b;">contacto@tanin.com</a>
+    </p>
+  </section>
+
+  <a class="whatsapp oculto" href="https://wa.me/5491234567890" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+  </a>
+
+  <!-- Modal para ampliar imágenes y videos -->
+  <div id="modalImg" class="modal-img" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content-img" id="imgAmpliada" style="display:none;">
+    <video class="modal-content-video" id="videoAmpliado" style="display:none;max-width:80vw;max-height:80vh;border-radius:10px;box-shadow:0 2px 16px rgba(0,0,0,0.5);" controls loop autoplay muted></video>
+    <div id="modalCaption"></div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menuContent');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    // Cierra el menú al hacer clic en un enlace
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animación de aparición en la sección hero
+      document.querySelector('.hero').classList.add('visible');
+      document.querySelectorAll('.menu-content a').forEach(link => {
+        link.addEventListener('click', () => {
+          document.getElementById('menuContent').style.display = 'none';
+        });
+      });
+    });
+
+    function openModal(img) {
+      const modal = document.getElementById('modalImg');
+      const modalImg = document.getElementById('imgAmpliada');
+      const modalVideo = document.getElementById('videoAmpliado');
+      modal.style.display = "block";
+      modalImg.style.display = "block";
+      modalVideo.style.display = "none";
+      modalImg.src = img.src;
+      document.getElementById('modalCaption').innerText = img.alt || '';
+    }
+
+    function openModalVideo(video) {
+      const modal = document.getElementById('modalImg');
+      const modalImg = document.getElementById('imgAmpliada');
+      const modalVideo = document.getElementById('videoAmpliado');
+      modal.style.display = "block";
+      modalImg.style.display = "none";
+      modalVideo.style.display = "block";
+      modalVideo.src = video.src;
+      modalVideo.currentTime = 0;
+      modalVideo.play();
+      document.getElementById('modalCaption').innerText = video.getAttribute('alt') || '';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modalImg');
+      const modalImg = document.getElementById('imgAmpliada');
+      const modalVideo = document.getElementById('videoAmpliado');
+      modal.style.display = "none";
+      modalImg.src = "";
+      modalVideo.pause();
+      modalVideo.src = "";
+    }
+    // Cerrar modal con tecla ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // Mostrar/ocultar menú y WhatsApp según la sección visible
+    function checkSectionVisibility() {
+      const hero = document.querySelector('.hero');
+      const contact = document.getElementById('contact');
+      const menu = document.querySelector('.menu');
+      const whatsapp = document.querySelector('.whatsapp');
+      const heroRect = hero.getBoundingClientRect();
+      const contactRect = contact.getBoundingClientRect();
+
+      // Menú solo visible si la sección hero está en pantalla
+      if (heroRect.bottom > 80) {
+        menu.classList.remove('oculto');
+      } else {
+        menu.classList.add('oculto');
+      }
+
+      // WhatsApp solo visible si la sección contacto está en pantalla
+      const inContact = contactRect.top < window.innerHeight && contactRect.bottom > 0;
+      if (inContact) {
+        whatsapp.classList.remove('oculto');
+      } else {
+        whatsapp.classList.add('oculto');
+      }
+    }
+
+    window.addEventListener('scroll', checkSectionVisibility);
+    window.addEventListener('resize', checkSectionVisibility);
+    document.addEventListener('DOMContentLoaded', checkSectionVisibility);
+  </script>
+</body>
+</html>
